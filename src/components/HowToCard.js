@@ -1,9 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-// import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
@@ -72,40 +71,36 @@ const styles = theme => ({
   }
 });
 
-class HowToCard extends React.Component {
-  state = { open: false };
+const HowToCard = props => {
+  const [state, setState] = useState({open: false});
 
-  handleToggle = () => {
-    this.setState(state => ({ open: !state.open }));
+  const handleToggle = () => {
+    setState({ open: !state.open });
   };
 
-  handleClose = event => {
-    if (this.anchorEl.contains(event.target)) {
-      return;
-    }
-
-    this.setState({ open: false });
+  const handleClose = event => {
+    // if (this.anchorEl.contains(event.target)) return;
+    setState({ open: false });
   };
 
-  handleDelete = () => {
-    this.props.delete(this.props.post.id);
+  const handleDelete = () => {
+    props.delete(props.post.id);
   };
 
-  handleEdit = () => {
-    const { match, history, post } = this.props;
+  const handleEdit = () => {
+    const { match, history, post } = props;
     const navigate = match.url.endsWith('new') ? history.replace : history.push;
     navigate(`${match.url}/new`, [post]);
   };
 
-  handleLike = () => {
-    const { edit, post } = this.props;
+  const handleLike = () => {
+    const { edit, post } = props;
     edit(post.id, { likes: post.likes + 1 });
   };
 
-  render() {
-    const { open } = this.state;
-    const { classes, user } = this.props;
-    const { title, body, updated_at, likes } = this.props.post;
+    const { open } = state;
+    const { classes, user } = props;
+    const { title, body, updated_at, likes } = props.post;
     const initials = user ? (user.firstName[0] + user.lastName[0]).toUpperCase() : 'X';
 
     return (
@@ -120,11 +115,11 @@ class HowToCard extends React.Component {
             action={
               <IconButton
                 buttonRef={node => {
-                  this.anchorEl = node;
+                  // this.anchorEl = node;
                 }}
                 aria-owns={open ? 'menu-list-grow' : undefined}
                 aria-haspopup="true"
-                onClick={this.handleToggle}
+                onClick={handleToggle}
               >
                 <MoreVert />
               </IconButton>
@@ -132,7 +127,7 @@ class HowToCard extends React.Component {
             title={title}
             subheader={updated_at}
           />
-          <Popper open={open} anchorEl={this.anchorEl} transition disablePortal placement="bottom-end">
+          <Popper open={open} transition disablePortal placement="bottom-end">
             {({ TransitionProps, placement }) => (
               <Grow
                 {...TransitionProps}
@@ -140,15 +135,15 @@ class HowToCard extends React.Component {
                 style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
               >
                 <Paper>
-                  <ClickAwayListener onClickAway={this.handleClose}>
+                  <ClickAwayListener onClickAway={handleClose}>
                     <MenuList>
-                      <MenuItem onClick={this.handleEdit} className={classes.menuItem}>
+                      <MenuItem onClick={handleEdit} className={classes.menuItem}>
                         <ListItemIcon>
                           <Edit />
                         </ListItemIcon>
                         <ListItemText inset primary="Edit" />
                       </MenuItem>
-                      <MenuItem onClick={this.handleDelete} className={classes.menuItem}>
+                      <MenuItem onClick={handleDelete} className={classes.menuItem}>
                         <ListItemIcon>
                           <Delete />
                         </ListItemIcon>
@@ -165,7 +160,7 @@ class HowToCard extends React.Component {
             <Typography>{parse(body)}</Typography>
           </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
-            <IconButton aria-label="Add to favorites" className={classes.noHover} onClick={this.handleLike}>
+            <IconButton aria-label="Add to favorites" className={classes.noHover} onClick={handleLike}>
               <FavoriteIcon />
             </IconButton>
             {/* TODO: replace these with likes */}
@@ -177,7 +172,6 @@ class HowToCard extends React.Component {
         </Card>
       </div>
     );
-  }
 }
 
 HowToCard.propTypes = {
