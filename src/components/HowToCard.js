@@ -23,6 +23,7 @@ import MenuList from '@material-ui/core/MenuList';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import parse from 'html-react-parser';
+// import {useAppState} from "@newstackdev/iosdk/dist/overmind";
 
 const styles = theme => ({
   card: {
@@ -73,6 +74,7 @@ const styles = theme => ({
 
 const HowToCard = props => {
   const [state, setState] = useState({open: false});
+  // const nc = useAppState();
 
   const handleToggle = () => {
     setState({ open: !state.open });
