@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useeditToggleState, useState} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -23,7 +23,7 @@ import MenuList from '@material-ui/core/MenuList';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import parse from 'html-react-parser';
-// import {useAppState} from "@newstackdev/iosdk/dist/overmind";
+import {useAppState} from "@newstackdev/iosdk/dist/overmind";
 
 const styles = theme => ({
   card: {
@@ -73,16 +73,17 @@ const styles = theme => ({
 });
 
 const HowToCard = props => {
-  const [state, setState] = useState({open: false});
-  // const nc = useAppState();
+  const [editToggleState, seteditToggleState] = useState({open: false});
+  const nc = useAppState();
+
 
   const handleToggle = () => {
-    setState({ open: !state.open });
+    seteditToggleState({ open: !editToggleState.open });
   };
 
   const handleClose = event => {
     // if (this.anchorEl.contains(event.target)) return;
-    setState({ open: false });
+    seteditToggleState({ open: false });
   };
 
   const handleDelete = () => {
@@ -100,7 +101,7 @@ const HowToCard = props => {
     edit(post.id, { likes: post.likes + 1 });
   };
 
-    const { open } = state;
+    const { open } = editToggleState;
     const { classes, user } = props;
     const { title, body, updated_at, likes } = props.post;
     const initials = user ? (user.firstName[0] + user.lastName[0]).toUpperCase() : 'X';
@@ -116,9 +117,6 @@ const HowToCard = props => {
             }
             action={
               <IconButton
-                buttonRef={node => {
-                  // this.anchorEl = node;
-                }}
                 aria-owns={open ? 'menu-list-grow' : undefined}
                 aria-haspopup="true"
                 onClick={handleToggle}
